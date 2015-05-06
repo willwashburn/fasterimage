@@ -58,6 +58,11 @@ class StreamParser
                     return $this->type = 'jpeg';
                 case chr(0x89) . 'P':
                     return $this->type = 'png';
+                case "RI":
+                    if ( substr($this->getChars(10), 6, 4) == 'WEBP' ) {
+                        return $this->type = 'webp';
+                    }
+                    return false;
                 default:
                     return false;
             }
@@ -83,6 +88,8 @@ class StreamParser
                 return $this->parseSizeForBMP();
             case 'jpeg':
                 return $this->parseSizeForJPEG();
+            case 'webp':
+                return $this->parseSizeForWebp();
         }
 
         return null;
