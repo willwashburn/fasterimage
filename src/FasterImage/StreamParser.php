@@ -240,5 +240,45 @@ class StreamParser
         return (reset($type) == 40) ? unpack('L*', substr($chars, 4)) : unpack('L*', substr($chars, 4, 8));
     }
 
+    /**
+     * @return null
+     * @throws \FasterImage\Exception\StreamBufferTooSmallException
+     */
+    private function parseSizeForWebp() {
+
+        $vp8 = substr($this->getChars(16),12,4);
+        $len =unpack("V",$this->getChars(4));
+
+
+        switch($vp8) {
+            case 'VP8':
+
+            case 'VP8L':
+
+            case 'VP8X':
+
+            $flags = current(unpack("C",$this->getChars(4)));
+
+            $b1 = current(unpack("C", $this->getChars(6)));
+            $b3 = current(unpack("C", $this->getChars(6)));
+            $b4 = current(unpack("C", $this->getChars(6)));
+            $b5 = current(unpack("C", $this->getChars(6)));
+            $b6 = current(unpack("C", $this->getChars(6)));
+            $b2 = current(unpack("C", $this->getChars(6)));
+
+            var_dump(compact('b1','b2','b3','b4','b5','b6'));
+
+
+                $width = 1 + $b1 + ($b2 << 8) + ($b3 << 16);
+
+                $height = 1 + $b4 + ($b5 << 8) + ($b6 << 16);
+
+                return [$width,$height];
+            default:
+                return null;
+        }
+
+    }
+
 
 }
