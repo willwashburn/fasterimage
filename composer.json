@@ -1,5 +1,5 @@
 {
-  "name": "FasterImage/FasterImage",
+  "name": "fasterImage/fasterimage",
   "description": "FasterImage finds the size or type of a set of images given their uris by fetching as little as needed, in parallel. Originally ported by Tom Moor.",
   "type": "library",
   "authors": [
