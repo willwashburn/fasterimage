@@ -1,5 +1,6 @@
 <?php namespace FasterImage;
 
+use FasterImage\Exception\InvalidImageException;
 use FasterImage\Exception\StreamBufferTooSmallException;
 
 /**
