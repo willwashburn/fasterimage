@@ -42,7 +42,6 @@ class FasterImageTest extends PHPUnit_Framework_TestCase
         return array(
             ['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQC3-MnPUUr3Z-pNsIl7Z33BXTUG0DtEzmbtjXV_hNhBnup5QyYPeUKpo', 178, 119, 'jpeg'],
             ['http://cdn.shopify.com/s/files/1/0224/1915/files/bunny.jpg?22110', 450, 250, 'jpeg'],
-            ['http://samples.fileformat.info/format/tiff/sample/548e3bab392d4c239d01b4c5df0ede96/CCITT_8.TIF?AWSAccessKeyId=0V91BEFA7GM093MEVMG2&Signature=KpDXuyWPicOqjSfg%2BKUVj7XyiyA%3D&Expires=1431022947', 1728, 2376, 'tiff'],
         );
     }
 }
