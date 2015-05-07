@@ -28,7 +28,7 @@ class FasterImageTest extends PHPUnit_Framework_TestCase
         $images = $client->batch($uris);
 
         foreach ( $images as $uri => $image ) {
-            $this->assertEquals($expected[ $uri ]['width'], $image['size'][0], "Failed to get the right width fro $uri");
+            $this->assertEquals($expected[ $uri ]['width'], $image['size'][0], "Failed to get the right width for $uri");
             $this->assertEquals($expected[ $uri ]['height'], $image['size'][1], "Failed to get the right height for $uri");
             $this->assertEquals($expected[ $uri ]['type'], $image['type'], "Failed to get the right type for $uri");
         }
@@ -42,7 +42,7 @@ class FasterImageTest extends PHPUnit_Framework_TestCase
         return array(
             ['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQC3-MnPUUr3Z-pNsIl7Z33BXTUG0DtEzmbtjXV_hNhBnup5QyYPeUKpo', 178, 119, 'jpeg'],
             ['http://cdn.shopify.com/s/files/1/0224/1915/files/bunny.jpg?22110', 450, 250, 'jpeg'],
-            ['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/test.tiff', 85, 67, 'tiff'],
+            ['http://samples.fileformat.info/format/tiff/sample/548e3bab392d4c239d01b4c5df0ede96/CCITT_8.TIF?AWSAccessKeyId=0V91BEFA7GM093MEVMG2&Signature=KpDXuyWPicOqjSfg%2BKUVj7XyiyA%3D&Expires=1431022947', 1728, 2376, 'tiff'],
         );
     }
 }
