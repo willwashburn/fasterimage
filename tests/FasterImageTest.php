@@ -42,7 +42,9 @@ class FasterImageTest  extends PHPUnit_Framework_TestCase
         return array(
             ['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQC3-MnPUUr3Z-pNsIl7Z33BXTUG0DtEzmbtjXV_hNhBnup5QyYPeUKpo',178,119,'jpeg'],
             ['http://cdn.shopify.com/s/files/1/0224/1915/files/bunny.jpg?22110',450,250,'jpeg'],
-            ['http://www.wpclipart.com/animals/B/beaver/beaver_3/beaver_confused.webp',508,352,'webp']
+            ['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/webp_vp8.webp',550,368,'webp'],
+            ['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/webp_vp8x.webp',386,395,'webp'],
+            ['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/webp_vp8l.webp',386,395,'webp'],
         );
     }
 }

@@ -244,36 +244,53 @@ class StreamParser
      * @return null
      * @throws \FasterImage\Exception\StreamBufferTooSmallException
      */
-    private function parseSizeForWebp() {
+    private function parseSizeForWebp()
+    {
+        $vp8 = substr($this->getChars(16), 12, 4);
+        $len = unpack("V", $this->getChars(4));
 
-        $vp8 = substr($this->getChars(16),12,4);
-        $len =unpack("V",$this->getChars(4));
+        switch ( trim($vp8) ) {
 
-
-        switch($vp8) {
             case 'VP8':
+                $this->getChars(6);
+
+                $width  = current(unpack("v", $this->getChars(2)));
+                $height = current(unpack("v", $this->getChars(2)));
+
+                return [
+                    $width & 0x3fff,
+                    $height & 0x3fff
+                ];
 
             case 'VP8L':
+                $this->getChars(1);
+
+                $b1 = current(unpack("C", $this->getChars(1)));
+                $b2 = current(unpack("C", $this->getChars(1)));
+                $b3 = current(unpack("C", $this->getChars(1)));
+                $b4 = current(unpack("C", $this->getChars(1)));
+
+                $width  = 1 + ((($b2 & 0x3f) << 8) | $b1);
+                $height = 1 + ((($b4 & 0xf) << 10) | ($b3 << 2) | (($b2 & 0xc0) >> 6));
+
+                return [$width, $height];
 
             case 'VP8X':
 
-            $flags = current(unpack("C",$this->getChars(4)));
+                $flags = current(unpack("C", $this->getChars(4)));
 
-            $b1 = current(unpack("C", $this->getChars(6)));
-            $b3 = current(unpack("C", $this->getChars(6)));
-            $b4 = current(unpack("C", $this->getChars(6)));
-            $b5 = current(unpack("C", $this->getChars(6)));
-            $b6 = current(unpack("C", $this->getChars(6)));
-            $b2 = current(unpack("C", $this->getChars(6)));
-
-            var_dump(compact('b1','b2','b3','b4','b5','b6'));
-
+                $b1 = current(unpack("C", $this->getChars(1)));
+                $b2 = current(unpack("C", $this->getChars(1)));
+                $b3 = current(unpack("C", $this->getChars(1)));
+                $b4 = current(unpack("C", $this->getChars(1)));
+                $b5 = current(unpack("C", $this->getChars(1)));
+                $b6 = current(unpack("C", $this->getChars(1)));
 
                 $width = 1 + $b1 + ($b2 << 8) + ($b3 << 16);
 
                 $height = 1 + $b4 + ($b5 << 8) + ($b6 << 16);
 
-                return [$width,$height];
+                return [$width, $height];
             default:
                 return null;
         }
