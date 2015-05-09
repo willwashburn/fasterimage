@@ -10,7 +10,6 @@ use FasterImage\Exception\StreamBufferTooSmallException;
  */
 class StreamParser
 {
-
     /**
      * The string that we have downloaded so far
      */
@@ -41,42 +40,6 @@ class StreamParser
     }
 
     /**
-     * Reads and returns the type of the image
-     *
-     * @return bool|string
-     */
-    public function parseType()
-    {
-        if ( ! $this->type ) {
-            $this->resetPointer();
-
-            switch ( $this->getChars(2) ) {
-                case "BM":
-                    return $this->type = 'bmp';
-                case "GI":
-                    return $this->type = 'gif';
-                case chr(0xFF) . chr(0xd8):
-                    return $this->type = 'jpeg';
-                case chr(0x89) . 'P':
-                    return $this->type = 'png';
-                case "RI":
-                    if ( substr($this->getChars(10), 6, 4) == 'WEBP' ) {
-                        return $this->type = 'webp';
-                    }
-                    return false;
-                case "II":
-                case "MM":
-                    return $this->type = 'tiff';
-                default:
-                    return false;
-            }
-        }
-
-        return $this->type;
-    }
-
-
-    /**
      * @return array|bool|null
      */
     public function parseSize()
@@ -101,11 +64,78 @@ class StreamParser
         return null;
     }
 
+    /**
+     * Reads and returns the type of the image
+     *
+     * @return bool|string
+     */
+    public function parseType()
+    {
+        if ( ! $this->type ) {
+            $this->resetPointer();
+
+            switch ( $this->getChars(2) ) {
+                case "BM":
+                    return $this->type = 'bmp';
+                case "GI":
+                    return $this->type = 'gif';
+                case chr(0xFF) . chr(0xd8):
+                    return $this->type = 'jpeg';
+                case chr(0x89) . 'P':
+                    return $this->type = 'png';
+                case "RI":
+                    if ( substr($this->getChars(10), 6, 4) == 'WEBP' ) {
+                        return $this->type = 'webp';
+                    }
+
+                    return false;
+                case "II":
+                case "MM":
+                    return $this->type = 'tiff';
+                default:
+                    return false;
+            }
+        }
+
+        return $this->type;
+    }
+
+    /**
+     * @return array
+     */
+    protected function parseSizeForBMP()
+    {
+        $chars = $this->getChars(29);
+        $chars = substr($chars, 14, 14);
+        $type  = unpack('C', $chars);
+
+        $size = (reset($type) == 40) ? unpack('l*', substr($chars, 4)) : unpack('l*', substr($chars, 4, 8));
+
+        return [
+            current($size),
+            abs(next($size))
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    protected function parseSizeForGIF()
+    {
+        $chars = $this->getChars(11);
+
+        $size = unpack("S*", substr($chars, 6, 4));
+
+        return [
+            current($size),
+            next($size)
+        ];
+    }
 
     /**
      * @return array|bool
      */
-    private function parseSizeForJPEG()
+    protected function parseSizeForJPEG()
     {
         $state = null;
 
@@ -128,7 +158,7 @@ class StreamParser
 
                     if ( $b === 0xe1 ) {
                         $data = $this->getChars($this->readInt($this->getChars(2)) - 2);
-                        // TODO use data to handle orientation of jpegs
+                        // TODO use data to handle orientation
                         break;
                     }
 
@@ -165,68 +195,10 @@ class StreamParser
         return false;
     }
 
-
-    /**
-     * Reset the pointer to the 0 position
-     */
-    protected function resetPointer()
-    {
-        $this->strpos = 0;
-    }
-
-
-    /**
-     * @param $characters
-     *
-     * @return bool|string
-     * @throws \FasterImage\Exception\StreamBufferTooSmallException
-     */
-    protected function getChars($characters)
-    {
-
-        if ( ! is_numeric($characters) ) {
-            throw new \InvalidArgumentException('"getChars" expects a number');
-        }
-
-        if ( strlen($this->stream_string) < $this->strpos + $characters ) {
-            throw new StreamBufferTooSmallException('Not enough of the stream available.');
-        }
-
-        $result = substr($this->stream_string, $this->strpos, $characters);
-
-        $this->strpos += $characters;
-
-        return $result;
-    }
-
-
-    /**
-     * @return mixed
-     */
-    private function getByte()
-    {
-        $c = $this->getChars(1);
-        $b = unpack("C", $c);
-
-        return reset($b);
-    }
-
-    /**
-     * @param $str
-     *
-     * @return int
-     */
-    private function readInt($str)
-    {
-        $size = unpack("C*", $str);
-
-        return ($size[1] << 8) + $size[2];
-    }
-
     /**
      * @return array
      */
-    private function parseSizeForPNG()
+    protected function parseSizeForPNG()
     {
         $chars = $this->getChars(25);
 
@@ -234,42 +206,74 @@ class StreamParser
     }
 
     /**
-     * @return array
+     * @return array|bool
+     * @throws \FasterImage\Exception\InvalidImageException
+     * @throws \FasterImage\Exception\StreamBufferTooSmallException
      */
-    private function parseSizeForGIF()
+    protected function parseSizeForTiff()
     {
-        $chars = $this->getChars(11);
+        $byte_order = $this->getChars(2);
 
-        $size = unpack("S*", substr($chars, 6, 4));
+        switch ( $byte_order ) {
+            case 'II':
+                $short = 'v';
+                $long  = 'V';
+                break;
+            case 'MM':
+                $short = 'n';
+                $long  = 'N';
+                break;
+            default:
+                return false;
+                break;
+        }
 
-        return [
-            current($size),
-            next($size)
-        ];
-    }
+        $this->getChars(2);
 
-    /**
-     * @return array
-     */
-    private function parseSizeForBMP()
-    {
-        $chars = $this->getChars(29);
-        $chars = substr($chars, 14, 14);
-        $type  = unpack('C', $chars);
+        $offset = current(unpack($long, $this->getChars(4)));
 
-        $size =  (reset($type) == 40) ? unpack('l*', substr($chars, 4)) : unpack('l*', substr($chars, 4, 8));
+        $this->getChars($offset - 8);
 
-        return [
-            current($size),
-            abs(next($size))
-        ];
+        $tag_count = current(unpack($short, $this->getChars(2)));
+
+        for ( $i = $tag_count; $i > 0; $i-- ) {
+
+            $type = current(unpack($short, $this->getChars(2)));
+            $this->getChars(6);
+            $data = current(unpack($short, $this->getChars(2)));
+
+            switch ( $type ) {
+                case 0x0100:
+                    $width = $data;
+                    break;
+                case 0x0101:
+                    $height = $data;
+                    break;
+                case 0x0112:
+                    $orientation = $data;
+                    break;
+            }
+
+            if ( isset($width) && isset($height) && isset($orientation) ) {
+
+                if ( $orientation >= 5 ) {
+                    return [$height, $width];
+                }
+
+                return [$width, $height];
+            }
+
+            $this->getChars(2);
+        }
+
+        throw new InvalidImageException;
     }
 
     /**
      * @return null
      * @throws \FasterImage\Exception\StreamBufferTooSmallException
      */
-    private function parseSizeForWebp()
+    protected function parseSizeForWebp()
     {
         $vp8 = substr($this->getChars(16), 12, 4);
         $len = unpack("V", $this->getChars(4));
@@ -323,66 +327,57 @@ class StreamParser
     }
 
     /**
-     * @return array|bool
-     * @throws \FasterImage\Exception\InvalidImageException
+     * @return mixed
+     */
+    private function getByte()
+    {
+        $c = $this->getChars(1);
+        $b = unpack("C", $c);
+
+        return reset($b);
+    }
+
+    /**
+     * @param $characters
+     *
+     * @return bool|string
      * @throws \FasterImage\Exception\StreamBufferTooSmallException
      */
-    private function parseSizeForTiff()
+    private function getChars($characters)
     {
-        $byte_order = $this->getChars(2);
 
-        switch ( $byte_order ) {
-            case 'II':
-                $short = 'v';
-                $long  = 'V';
-                break;
-            case 'MM':
-                $short = 'n';
-                $long  = 'N';
-                break;
-            default:
-                return false;
-                break;
+        if ( ! is_numeric($characters) ) {
+            throw new \InvalidArgumentException('"getChars" expects a number');
         }
 
-        $this->getChars(2);
-
-        $offset = current(unpack($long,$this->getChars(4)));
-
-        $this->getChars($offset-8);
-
-        $tag_count = current(unpack($short,$this->getChars(2)));
-
-        for($i = $tag_count; $i > 0; $i--) {
-
-            $type = current(unpack($short,$this->getChars(2)));
-            $this->getChars(6);
-            $data = current(unpack($short,$this->getChars(2)));
-
-            switch ($type) {
-                case 0x0100:
-                    $width = $data;
-                    break;
-                case 0x0101:
-                    $height = $data;
-                    break;
-                case 0x0112:
-                    $orientation = $data;
-                    break;
-            }
-
-            if ( isset($width) && isset($height) && isset($orientation) ) {
-
-                if($orientation >= 5) {
-                    return [$height,$width];
-                }
-
-                return [$width,$height];
-            }
-
-            $this->getChars(2);
+        if ( strlen($this->stream_string) < $this->strpos + $characters ) {
+            throw new StreamBufferTooSmallException('Not enough of the stream available.');
         }
 
-        throw new InvalidImageException;
+        $result = substr($this->stream_string, $this->strpos, $characters);
+
+        $this->strpos += $characters;
+
+        return $result;
+    }
+
+    /**
+     * @param $str
+     *
+     * @return int
+     */
+    private function readInt($str)
+    {
+        $size = unpack("C*", $str);
+
+        return ($size[1] << 8) + $size[2];
+    }
+
+    /**
+     * Reset the pointer to the 0 position
+     */
+    private function resetPointer()
+    {
+        $this->strpos = 0;
     }
 }
