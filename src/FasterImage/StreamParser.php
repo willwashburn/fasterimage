@@ -125,23 +125,32 @@ class StreamParser
 
                 case 'sof':
                     $b = $this->getByte();
+
+                    if ( $b === 0xe1 ) {
+                        $data = $this->getChars($this->readInt($this->getChars(2)) - 2);
+                        // TODO use data to handle orientation of jpegs
+                        break;
+                    }
+
                     if ( in_array($b, range(0xe0, 0xef)) ) {
                         $state = 'skipframe';
-                    } elseif ( in_array($b, array_merge(range(0xC0, 0xC3), range(0xC5, 0xC7), range(0xC9, 0xCB), range(0xCD, 0xCF))) ) {
-                        $state = 'readsize';
-                    } elseif ( $b == 0xFF ) {
-                        $state = 'sof';
-                    } else {
-                        $state = 'skipframe';
+                        break;
                     }
+
+                    if ( in_array($b, array_merge(range(0xC0, 0xC3), range(0xC5, 0xC7), range(0xC9, 0xCB), range(0xCD, 0xCF))) ) {
+                        $state = 'readsize';
+                        break;
+                    }
+                    if ( $b == 0xFF ) {
+                        $state = 'sof';
+                        break;
+                    }
+
+                    $state = 'skipframe';
                     break;
 
                 case 'skipframe':
-                    $skip  = $this->readInt($this->getChars(2)) - 2;
-                    $state = 'doskip';
-                    break;
-
-                case 'doskip':
+                    $skip = $this->readInt($this->getChars(2)) - 2;
                     $this->getChars($skip);
                     $state = 'started';
                     break;
