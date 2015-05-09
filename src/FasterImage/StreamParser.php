@@ -243,11 +243,11 @@ class StreamParser
         $chars = substr($chars, 14, 14);
         $type  = unpack('C', $chars);
 
-        $size =  (reset($type) == 40) ? unpack('L*', substr($chars, 4)) : unpack('L*', substr($chars, 4, 8));
+        $size =  (reset($type) == 40) ? unpack('l*', substr($chars, 4)) : unpack('l*', substr($chars, 4, 8));
 
         return [
             current($size),
-            next($size)
+            abs(next($size))
         ];
     }
 

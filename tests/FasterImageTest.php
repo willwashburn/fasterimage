@@ -41,6 +41,7 @@ class FasterImageTest extends PHPUnit_Framework_TestCase
     {
         return array(
             ['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/test.bmp',40,27,'bmp'],
+            ['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/test2.bmp',1920,1080,'bmp'],
             ['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/webp_vp8.webp',550,368,'webp'],
             ['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/webp_vp8x.webp',386,395,'webp'],
             ['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/webp_vp8l.webp',386,395,'webp'],
