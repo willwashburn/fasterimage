@@ -28,6 +28,7 @@ class FasterImageTest extends PHPUnit_Framework_TestCase
         $images = $client->batch($uris);
 
         foreach($images as $uri => $image) {
+            $this->assertArrayHasKey('size',$image,"There is no size defined for $uri");
             $this->assertEquals($expected[$uri]['width'],$image['size'][0],"Failed to get the right width for $uri");
             $this->assertEquals($expected[$uri]['height'],$image['size'][1],"Failed to get the right height for $uri");
             $this->assertEquals($expected[$uri]['type'],$image['type'],"Failed to get the right type for $uri");
