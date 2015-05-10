@@ -65,7 +65,7 @@ class FasterImage
      */
     private function handle($url, & $result)
     {
-        $stream           = new StreamParser();
+        $parser           = new ImageParser(new Stream());
         $result['rounds'] = 0;
         $result['bytes']  = 0;
 
@@ -94,22 +94,22 @@ class FasterImage
         curl_setopt($ch, CURLOPT_ENCODING, "");
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_WRITEFUNCTION, function ($ch, $str) use (& $result, & $stream) {
+        curl_setopt($ch, CURLOPT_WRITEFUNCTION, function ($ch, $str) use (& $result, & $parser) {
 
             $result['rounds']++;
             $result['bytes'] += strlen($str);
 
-            $stream->append($str);
+            $parser->appendToStream($str);
 
             // store the type in the result array by looking at the bits
-            $result['type'] = $stream->parseType();
+            $result['type'] = $parser->parseType();
 
             try {
                 /*
                  * We try here to parse the buffer of characters we already have
                  * for the size.
                  */
-                $result['size'] = $stream->parseSize();
+                $result['size'] = $parser->parseSize();
             }
             catch (StreamBufferTooSmallException $e) {
                 /*
