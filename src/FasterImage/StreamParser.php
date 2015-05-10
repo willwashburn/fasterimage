@@ -202,7 +202,13 @@ class StreamParser
     {
         $chars = $this->getChars(25);
 
-        return unpack("N*", substr($chars, 16, 8));
+        $size = unpack("N*", substr($chars, 16, 8));
+
+        return [
+            current($size),
+            next($size)
+        ];
+
     }
 
     /**
