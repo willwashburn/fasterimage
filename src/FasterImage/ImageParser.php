@@ -1,7 +1,5 @@
 <?php namespace FasterImage;
 
-use FasterImage\Exception\InvalidImageException;
-
 /**
  * Parses the stream of the image and determines the size and type of the image
  *
@@ -23,7 +21,8 @@ class ImageParser
     /**
      * @param \FasterImage\StreamableInterface $stream
      */
-    public function __construct(StreamableInterface $stream) {
+    public function __construct(StreamableInterface $stream)
+    {
 
         $this->stream = $stream;
     }
@@ -157,7 +156,15 @@ class ImageParser
 
                     if ( $b === 0xe1 ) {
                         $data = $this->stream->read($this->readInt($this->stream->read(2)) - 2);
-                        // TODO use data to handle orientation
+
+                        $stream = new Stream;
+                        $stream->write($data);
+
+                        if ( $stream->read(4) === 'Exif' ) {
+                            $stream->read(2);
+                            $exif = new ExifParser($stream);
+                        }
+
                         break;
                     }
 
@@ -187,7 +194,13 @@ class ImageParser
                 case 'readsize':
                     $c = $this->stream->read(7);
 
-                    return array($this->readInt(substr($c, 5, 2)), $this->readInt(substr($c, 3, 2)));
+                    $size = array($this->readInt(substr($c, 5, 2)), $this->readInt(substr($c, 3, 2)));
+
+                    if ( isset($exif) && $exif->isRotated() ) {
+                        return array_reverse($size);
+                    }
+
+                    return $size;
             }
         }
 
