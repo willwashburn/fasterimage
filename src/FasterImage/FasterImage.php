@@ -14,6 +14,12 @@ use FasterImage\Exception\StreamBufferTooSmallException;
 class FasterImage
 {
     /**
+     * The default timeout
+     * @var int
+     */
+    protected $timeout = 10;
+
+    /**
      * Get the size of each of the urls in a list
      *
      * @param array $urls
@@ -54,7 +60,6 @@ class FasterImage
 
     }
 
-
     /**
      * Create the handle for the curl request
      *
@@ -85,8 +90,8 @@ class FasterImage
             "Accept-Language: en-us,en;q=0.5",
             "Pragma: ", // browsers keep this blank.
         ]);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->timeout);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
 
         #  Some web servers require the useragent to be not a bot. So we are liars.
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36');
@@ -137,5 +142,12 @@ class FasterImage
         });
 
         return $ch;
+    }
+
+    /**
+     * @param $seconds
+     */
+    public function setTimeout($seconds) {
+        $this->timeout = $seconds;
     }
 }
