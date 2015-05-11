@@ -14,6 +14,12 @@ use FasterImage\Exception\StreamBufferTooSmallException;
 class FasterImage
 {
     /**
+     * The default timeout
+     * @var int
+     */
+    protected $timeout = 10;
+
+    /**
      * Get the size of each of the urls in a list
      *
      * @param array $urls
@@ -65,7 +71,7 @@ class FasterImage
      */
     private function handle($url, & $result)
     {
-        $stream           = new StreamParser();
+        $parser           = new ImageParser(new Stream());
         $result['rounds'] = 0;
         $result['bytes']  = 0;
 
@@ -85,8 +91,8 @@ class FasterImage
             "Accept-Language: en-us,en;q=0.5",
             "Pragma: ", // browsers keep this blank.
         ]);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->timeout);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
 
         #  Some web servers require the useragent to be not a bot. So we are liars.
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36');
@@ -94,22 +100,22 @@ class FasterImage
         curl_setopt($ch, CURLOPT_ENCODING, "");
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_WRITEFUNCTION, function ($ch, $str) use (& $result, & $stream) {
+        curl_setopt($ch, CURLOPT_WRITEFUNCTION, function ($ch, $str) use (& $result, & $parser) {
 
             $result['rounds']++;
             $result['bytes'] += strlen($str);
 
-            $stream->append($str);
+            $parser->appendToStream($str);
 
             try {
                 // store the type in the result array by looking at the bits
-                $result['type'] = $stream->parseType();
+                $result['type'] = $parser->parseType();
 
                 /*
                  * We try here to parse the buffer of characters we already have
                  * for the size.
                  */
-                $result['size'] = $stream->parseSize();
+                $result['size'] = $parser->parseSize();
             }
             catch (StreamBufferTooSmallException $e) {
                 /*
@@ -137,5 +143,12 @@ class FasterImage
         });
 
         return $ch;
+    }
+
+    /**
+     * @param $seconds
+     */
+    public function setTimeout($seconds) {
+        $this->timeout = $seconds;
     }
 }
