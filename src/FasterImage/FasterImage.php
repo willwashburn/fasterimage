@@ -66,6 +66,13 @@ class FasterImage
         return $results;
     }
 
+    /**
+     * @param $seconds
+     */
+    public function setTimeout($seconds)
+    {
+        $this->timeout = $seconds;
+    }
 
     /**
      * Create the handle for the curl request
@@ -75,7 +82,7 @@ class FasterImage
      *
      * @return resource
      */
-    private function handle($url, & $result)
+    protected function handle($url, & $result)
     {
         $parser           = new ImageParser(new Stream());
         $result['rounds'] = 0;
@@ -89,6 +96,12 @@ class FasterImage
         curl_setopt($ch, CURLOPT_BUFFERSIZE, 256);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->timeout);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
+
+        #  Some web servers require the useragent to be not a bot. So we are liars.
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36');
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             "Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5",
             "Cache-Control: max-age=0",
@@ -98,15 +111,9 @@ class FasterImage
             "Accept-Language: en-us,en;q=0.5",
             "Pragma: ", // browsers keep this blank.
         ]);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->timeout);
-        curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
-
-        #  Some web servers require the useragent to be not a bot. So we are liars.
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36');
-        # Honestly don't remember why we do this
         curl_setopt($ch, CURLOPT_ENCODING, "");
 
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
         curl_setopt($ch, CURLOPT_WRITEFUNCTION, function ($ch, $str) use (& $result, & $parser) {
 
             $result['rounds']++;
@@ -150,13 +157,5 @@ class FasterImage
         });
 
         return $ch;
-    }
-
-    /**
-     * @param $seconds
-     */
-    public function setTimeout($seconds)
-    {
-        $this->timeout = $seconds;
     }
 }

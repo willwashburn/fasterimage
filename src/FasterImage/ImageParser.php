@@ -10,6 +10,12 @@ use FasterImage\Exception\InvalidImageException;
 class ImageParser
 {
     /**
+     * The type of image we've determined this is
+     *
+     * @var string
+     */
+    protected $type;
+    /**
      * @var \FasterImage\StreamableInterface $stream
      */
     private $stream;
@@ -21,13 +27,6 @@ class ImageParser
 
         $this->stream = $stream;
     }
-
-    /**
-     * The type of image we've determined this is
-     *
-     * @var string
-     */
-    protected $type;
 
     /**
      * Append to the stream
@@ -218,61 +217,13 @@ class ImageParser
      */
     protected function parseSizeForTiff()
     {
-        $byte_order = $this->stream->read(2);
+        $exif = new ExifParser($this->stream);
 
-        switch ( $byte_order ) {
-            case 'II':
-                $short = 'v';
-                $long  = 'V';
-                break;
-            case 'MM':
-                $short = 'n';
-                $long  = 'N';
-                break;
-            default:
-                return false;
-                break;
+        if ( $exif->isRotated() ) {
+            return [$exif->getHeight(), $exif->getWidth()];
         }
 
-        $this->stream->read(2);
-
-        $offset = current(unpack($long, $this->stream->read(4)));
-
-        $this->stream->read($offset - 8);
-
-        $tag_count = current(unpack($short, $this->stream->read(2)));
-
-        for ( $i = $tag_count; $i > 0; $i-- ) {
-
-            $type = current(unpack($short, $this->stream->read(2)));
-            $this->stream->read(6);
-            $data = current(unpack($short, $this->stream->read(2)));
-
-            switch ( $type ) {
-                case 0x0100:
-                    $width = $data;
-                    break;
-                case 0x0101:
-                    $height = $data;
-                    break;
-                case 0x0112:
-                    $orientation = $data;
-                    break;
-            }
-
-            if ( isset($width) && isset($height) && isset($orientation) ) {
-
-                if ( $orientation >= 5 ) {
-                    return [$height, $width];
-                }
-
-                return [$width, $height];
-            }
-
-            $this->stream->read(2);
-        }
-
-        throw new InvalidImageException;
+        return [$exif->getWidth(), $exif->getHeight()];
     }
 
     /**
