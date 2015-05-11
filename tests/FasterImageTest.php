@@ -12,6 +12,28 @@ class FasterImageTest extends PHPUnit_Framework_TestCase
      * @internal     param $original
      * @internal     param $proxy
      */
+    public function test_invalid_images_return_failed()
+    {
+        $uris     = [
+            'http://example.com/foobarimage.jpg',
+            'https://example.com/foobarimage.jpg',
+            'sdfsdfdsfds',
+        ];
+
+        $client = new \FasterImage\FasterImage();
+        $images = $client->batch($uris);
+
+        foreach($images as $uri => $image) {
+            $this->assertArrayHasKey('size',$image);
+            $this->assertEquals('failed',$image['size']);
+        }
+    }
+
+    /**
+     * @throws \Exception
+     * @internal     param $original
+     * @internal     param $proxy
+     */
     public function test_batch_returns_size_and_type()
     {
         $data = $this->linksProvider();
