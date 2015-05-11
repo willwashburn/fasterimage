@@ -101,10 +101,10 @@ class FasterImage
 
             $stream->append($str);
 
-            // store the type in the result array by looking at the bits
-            $result['type'] = $stream->parseType();
-
             try {
+                // store the type in the result array by looking at the bits
+                $result['type'] = $stream->parseType();
+
                 /*
                  * We try here to parse the buffer of characters we already have
                  * for the size.
