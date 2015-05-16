@@ -47,7 +47,7 @@ class FasterImageTest extends PHPUnit_Framework_TestCase
         }
 
         $client = new \FasterImage\FasterImage();
-        $client->setTimeout(60);
+        $client->setTimeout(120);
         $images = $client->batch($uris);
 
         foreach ( $images as $uri => $image ) {
