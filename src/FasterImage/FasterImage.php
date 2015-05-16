@@ -84,7 +84,8 @@ class FasterImage
      */
     protected function handle($url, & $result)
     {
-        $parser           = new ImageParser(new Stream());
+        $stream           = new Stream();
+        $parser           = new ImageParser($stream);
         $result['rounds'] = 0;
         $result['bytes']  = 0;
         $result['size']   = 'failed';
@@ -114,12 +115,12 @@ class FasterImage
         curl_setopt($ch, CURLOPT_ENCODING, "");
 
 
-        curl_setopt($ch, CURLOPT_WRITEFUNCTION, function ($ch, $str) use (& $result, & $parser) {
+        curl_setopt($ch, CURLOPT_WRITEFUNCTION, function ($ch, $str) use (& $result, & $parser, & $stream) {
 
             $result['rounds']++;
             $result['bytes'] += strlen($str);
 
-            $parser->appendToStream($str);
+            $stream->write($str);
 
             try {
                 // store the type in the result array by looking at the bits

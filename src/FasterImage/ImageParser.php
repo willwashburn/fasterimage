@@ -21,20 +21,9 @@ class ImageParser
     /**
      * @param \FasterImage\StreamableInterface $stream
      */
-    public function __construct(StreamableInterface $stream)
+    public function __construct(StreamableInterface & $stream)
     {
-
         $this->stream = $stream;
-    }
-
-    /**
-     * Append to the stream
-     *
-     * @param $string
-     */
-    public function appendToStream($string)
-    {
-        $this->stream->write($string);
     }
 
     /**
