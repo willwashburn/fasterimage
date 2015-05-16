@@ -42,11 +42,11 @@ class FasterImageTest extends PHPUnit_Framework_TestCase
         $uris     = [];
 
         foreach ( $data as $link ) {
-            $uri              = $link['uri'];
-            $width            = $link['width'];
-            $height           = $link['height'];
-            $type             = $link['type'];
-            
+            $uri              = current($link);
+            $width            = next($link);
+            $height           = next($link);
+            $type             = next($link);
+
             $uris[]           = $uri;
             $expected[ $uri ] = compact('width', 'height', 'type');
         }
