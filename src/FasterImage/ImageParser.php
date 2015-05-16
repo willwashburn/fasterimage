@@ -36,6 +36,9 @@ class ImageParser
         switch ( $this->type ) {
             case 'png':
                 return $this->parseSizeForPNG();
+            case 'ico':
+            case 'cur':
+                return $this->parseSizeForIco();
             case 'gif':
                 return $this->parseSizeForGIF();
             case 'bmp':
@@ -49,6 +52,22 @@ class ImageParser
         }
 
         return null;
+    }
+
+    /**
+     * @return array
+     */
+    public function parseSizeForIco()
+    {
+        $this->stream->read(6);
+
+        $b1 = $this->getByte();
+        $b2 = $this->getByte();
+
+        return [
+            $b1 == 0 ? 256 : $b1,
+            $b2 == 0 ? 256 : $b2
+        ];
     }
 
     /**
@@ -68,6 +87,16 @@ class ImageParser
                     return $this->type = 'gif';
                 case chr(0xFF) . chr(0xd8):
                     return $this->type = 'jpeg';
+                case "\0\0":
+                    switch ( $this->readByte($this->stream->peek(1)) ) {
+                        case 1:
+                            return $this->type = 'ico';
+                        case 2:
+                            return $this->type = 'cur';
+                    }
+
+                    return false;
+
                 case chr(0x89) . 'P':
                     return $this->type = 'png';
                 case "RI":
