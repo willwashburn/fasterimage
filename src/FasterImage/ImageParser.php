@@ -47,6 +47,8 @@ class ImageParser
                 return $this->parseSizeForJPEG();
             case 'tiff':
                 return $this->parseSizeForTiff();
+            case 'psd':
+                return $this->parseSizeForPSD();
             case 'webp':
                 return $this->parseSizeForWebp();
         }
@@ -67,6 +69,20 @@ class ImageParser
         return [
             $b1 == 0 ? 256 : $b1,
             $b2 == 0 ? 256 : $b2
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    protected function parseSizeForPSD() {
+
+        $this->stream->read(14);
+        $sizes = unpack("N*",$this->stream->read(12));
+
+        return [
+            $sizes[2],
+            $sizes[1]
         ];
     }
 
@@ -105,6 +121,8 @@ class ImageParser
                     }
 
                     return false;
+                case'8B':
+                    return $this->type = 'psd';
                 case "II":
                 case "MM":
                     return $this->type = 'tiff';
