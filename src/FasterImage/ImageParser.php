@@ -290,10 +290,17 @@ class ImageParser
      */
     private function getByte()
     {
-        $c = $this->stream->read(1);
-        $b = unpack("C", $c);
+        return $this->readByte($this->stream->read(1));
+    }
 
-        return reset($b);
+    /**
+     * @param $string
+     *
+     * @return mixed
+     */
+    private function readByte($string)
+    {
+        return current(unpack("C", $string));
     }
 
     /**
