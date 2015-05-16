@@ -22,13 +22,20 @@ class Stream implements StreamableInterface
     protected $strpos = 0;
 
     /**
-     * Append to the stream string
+     * Get characters from the string but don't move the pointer
      *
-     * @param $string
+     * @param $characters
+     *
+     * @return string
+     * @throws \FasterImage\Exception\StreamBufferTooSmallException
      */
-    public function write($string)
+    public function peek($characters)
     {
-        $this->stream_string .= $string;
+        if ( strlen($this->stream_string) < $this->strpos + $characters ) {
+            throw new StreamBufferTooSmallException('Not enough of the stream available.');
+        }
+
+        return substr($this->stream_string, $this->strpos, $characters);
     }
 
     /**
@@ -41,11 +48,7 @@ class Stream implements StreamableInterface
      */
     public function read($characters)
     {
-        if ( strlen($this->stream_string) < $this->strpos + $characters ) {
-            throw new StreamBufferTooSmallException('Not enough of the stream available.');
-        }
-
-        $result = substr($this->stream_string, $this->strpos, $characters);
+        $result = $this->peek($characters);
 
         $this->strpos += $characters;
 
@@ -60,5 +63,15 @@ class Stream implements StreamableInterface
     public function resetPointer()
     {
         $this->strpos = 0;
+    }
+
+    /**
+     * Append to the stream string
+     *
+     * @param $string
+     */
+    public function write($string)
+    {
+        $this->stream_string .= $string;
     }
 }
