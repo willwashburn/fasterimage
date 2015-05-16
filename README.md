@@ -24,7 +24,7 @@ FasterImage uses the curl_muli* suite to run requests in parallel.
 
 ```composer require fasterimage/fasterimage```
 
-Alternatively, add ```"fasterimage/fasterimage": "0.0.7"``` to your composer.json
+Alternatively, add ```"fasterimage/fasterimage": "~1.0"``` to your composer.json
 
 ## References
 
