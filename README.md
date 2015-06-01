@@ -12,7 +12,13 @@ FasterImage uses the curl_muli* suite to run requests in parallel.
         $images = $client->batch(array(
             'http://wwww.example.com/image1.jpg',
             'http://wwww.example.com/image2.gif',
-            'http://wwww.example.com/image3.png'
+            'http://wwww.example.com/image3.png',
+            'http://wwww.example.com/image4.bmp',
+            'http://wwww.example.com/image5.tiff',
+            'http://wwww.example.com/image6.psd',
+            'http://wwww.example.com/image7.webp',
+            'http://wwww.example.com/image8.ico',
+            'http://wwww.example.com/image9.cur'
         ));
         
         foreach ($images as $image) {
