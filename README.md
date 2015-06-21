@@ -1,8 +1,8 @@
-[![Build Status](https://travis-ci.org/willwashburn/FasterImage.svg?branch=master)](https://travis-ci.org/willwashburn/FasterImage)
-# FasterImage
+# FasterImage [![Build Status](https://travis-ci.org/willwashburn/FasterImage.svg?branch=master)](https://travis-ci.org/willwashburn/FasterImage)
+
 FasterImage finds the dimensions or filetype of a remote image file given its uri by fetching as little as needed, based on the excellent [Ruby implementation by Stephen Sykes](https://github.com/sdsykes/fastimage) and [PHP implementation by Tom Moor](https://github.com/tommoor/fastimage).
 
-FasterImage uses the curl_muli* suite to run requests in parallel.
+FasterImage uses the curl_muli* suite to run requests in parallel. Currently supports JPG, GIF, PNG, WEPB, BMP, PSD, TIFF, and ICO files.
 
 ## Usage
 ```php
