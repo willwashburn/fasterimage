@@ -26,7 +26,7 @@ FasterImage uses the curl_muli* suite to run requests in parallel. Currently sup
         }
 ```
 
-## Installation
+## Install
 
 ```composer require fasterimage/fasterimage```
 
@@ -41,11 +41,6 @@ Alternatively, add ```"fasterimage/fasterimage": "~1.0"``` to your composer.json
 * http://www.anttikupila.com/flash/getting-jpg-dimensions-with-as3-without-loading-the-entire-file/
 * http://imagesize.rubyforge.org/
 
-
 ## License
 
-FasterImage is released under the MIT license. It is simple and easy to understand and places almost no restrictions on what you can do with the software. [More Information](http://en.wikipedia.org/wiki/MIT_License)
-
-## Download
-Releases are available for download from
-[GitHub](http://github.com/willwashburn/fasterimage/downloads).
+(c) 2015 Will Washburn. MIT License
