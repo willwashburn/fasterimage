@@ -1,3 +1,6 @@
+### 1.0.2 (2015-08-27)
+* Fail invalid image exceptions gracefully when using batch requests
+
 ### 1.0.1 (2015-05-16)
 
 * Support PHP v5.4+

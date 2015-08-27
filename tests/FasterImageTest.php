@@ -8,9 +8,7 @@ include('../vendor/autoload.php');
 class FasterImageTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @throws \Exception
-     * @internal     param $original
-     * @internal     param $proxy
+     * @throws Exception
      */
     public function test_invalid_images_return_failed()
     {
@@ -29,10 +27,23 @@ class FasterImageTest extends PHPUnit_Framework_TestCase
         }
     }
 
+    public function test_invalid_image_returns_invalid() {
+        $uris = [
+            'http://gluesticksgumdrops.com/wp-content/uploads/2015/03/how-to-find-more-time-to-read-to-your-kids.jpg'
+        ];
+
+        $client = new \FasterImage\FasterImage();
+        $images = $client->batch($uris);
+
+        foreach ( $images as $uri => $image ) {
+            $this->assertArrayHasKey('size', $image);
+            $this->assertEquals('invalid', $image['size']);
+        }
+
+    }
+
     /**
      * @throws \Exception
-     * @internal     param $original
-     * @internal     param $proxy
      */
     public function test_batch_returns_size_and_type()
     {

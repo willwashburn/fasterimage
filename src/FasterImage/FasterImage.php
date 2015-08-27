@@ -1,5 +1,6 @@
 <?php namespace FasterImage;
 
+use FasterImage\Exception\InvalidImageException;
 use FasterImage\Exception\StreamBufferTooSmallException;
 
 /**
@@ -115,7 +116,7 @@ class FasterImage
         curl_setopt($ch, CURLOPT_ENCODING, "");
 
 
-        curl_setopt($ch, CURLOPT_WRITEFUNCTION, function ($ch, $str) use (& $result, & $parser, & $stream) {
+        curl_setopt($ch, CURLOPT_WRITEFUNCTION, function ($ch, $str) use (& $result, & $parser, & $stream, $url) {
 
             $result['rounds']++;
             $result['bytes'] += strlen($str);
@@ -145,7 +146,19 @@ class FasterImage
                 $result['size'] = 'failed';
 
                 return strlen($str);
+            } catch (InvalidImageException $e) {
+
+                /*
+                 * This means we've determined that we're lost and don't know
+                 * how to parse this image.
+                 *
+                 * We set the size to invalid and move on
+                 */
+                $result['size'] = 'invalid';
+
+                return -1;
             }
+
 
             /*
              * We return -1 to abort the transfer when we have enough buffered
