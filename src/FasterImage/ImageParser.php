@@ -1,5 +1,9 @@
 <?php namespace FasterImage;
 
+use WillWashburn\Stream\Exception\StreamBufferTooSmallException;
+use WillWashburn\Stream\Stream;
+use WillWashburn\Stream\StreamableInterface;
+
 /**
  * Parses the stream of the image and determines the size and type of the image
  *
@@ -14,12 +18,14 @@ class ImageParser
      */
     protected $type;
     /**
-     * @var \FasterImage\StreamableInterface $stream
+     * @var StreamableInterface $stream
      */
     private $stream;
 
     /**
-     * @param \FasterImage\StreamableInterface $stream
+     * ImageParser constructor.
+     *
+     * @param StreamableInterface $stream
      */
     public function __construct(StreamableInterface & $stream)
     {
@@ -262,7 +268,7 @@ class ImageParser
     /**
      * @return array|bool
      * @throws \FasterImage\Exception\InvalidImageException
-     * @throws \FasterImage\Exception\StreamBufferTooSmallException
+     * @throws StreamBufferTooSmallException
      */
     protected function parseSizeForTiff()
     {
@@ -277,7 +283,7 @@ class ImageParser
 
     /**
      * @return null
-     * @throws \FasterImage\Exception\StreamBufferTooSmallException
+     * @throws StreamBufferTooSmallException
      */
     protected function parseSizeForWebp()
     {

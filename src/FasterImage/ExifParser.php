@@ -1,6 +1,7 @@
 <?php namespace FasterImage;
 
 use FasterImage\Exception\InvalidImageException;
+use WillWashburn\Stream\StreamableInterface;
 
 /**
  * Class ExifParser
@@ -39,7 +40,9 @@ class ExifParser
     protected $orientation;
 
     /**
-     * @param \FasterImage\StreamableInterface $stream
+     * ExifParser constructor.
+     *
+     * @param StreamableInterface $stream
      */
     public function __construct(StreamableInterface $stream)
     {

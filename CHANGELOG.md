@@ -1,3 +1,8 @@
+## Changelog
+
+### 1.0.3 (2016-04-9)
+* Use external stream package
+
 ### 1.0.2 (2015-08-27)
 * Fail invalid image exceptions gracefully when using batch requests
 

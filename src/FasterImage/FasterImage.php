@@ -1,7 +1,8 @@
 <?php namespace FasterImage;
 
 use FasterImage\Exception\InvalidImageException;
-use FasterImage\Exception\StreamBufferTooSmallException;
+use WillWashburn\Stream\Exception\StreamBufferTooSmallException;
+use WillWashburn\Stream\Stream;
 
 /**
  * FasterImage - Because sometimes you just want the size, and you want them in
@@ -114,7 +115,6 @@ class FasterImage
             "Pragma: ", // browsers keep this blank.
         ]);
         curl_setopt($ch, CURLOPT_ENCODING, "");
-
 
         curl_setopt($ch, CURLOPT_WRITEFUNCTION, function ($ch, $str) use (& $result, & $parser, & $stream, $url) {
 
