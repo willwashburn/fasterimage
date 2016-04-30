@@ -14,6 +14,9 @@
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./src</directory>
         </whitelist>
+        <blacklist>
+            <directory>./vendor</directory>
+        </blacklist>
     </filter>
     <testsuites>
         <testsuite name="Package Test Suite">
