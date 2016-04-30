@@ -65,6 +65,14 @@ class FasterImage
             }
         } while ( $active );
 
+        foreach (array_values($urls) as $count => $uri ) {
+            $error = curl_error($$count);
+
+            if($error) {
+                $results['failure_reason'] = $error;
+            }
+        }
+
         return $results;
     }
 
