@@ -82,7 +82,7 @@ class FasterImageTest extends PHPUnit_Framework_TestCase
     {
         return array(
             ['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/exif_orientation.jpg', 600, 450, 'jpeg'],
-            ['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/favicon.ico', 16, 16, 'ico'],
+            //['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/favicon.ico', 16, 16, 'ico'],
             ['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/infinite.jpg', 160, 240, 'jpeg'],
             ['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/man.ico', 48, 48, 'ico'],
             ['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/orient_2.jpg', 230, 408, 'jpeg'],
