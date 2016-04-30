@@ -69,7 +69,7 @@ class FasterImage
             $error = curl_error($$count);
 
             if($error) {
-                $results['failure_reason'] = $error;
+                $results[$uri]['failure_reason'] = $error;
             }
         }
 
