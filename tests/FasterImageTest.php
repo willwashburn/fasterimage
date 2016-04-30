@@ -49,6 +49,10 @@ class FasterImageTest extends PHPUnit_Framework_TestCase
     {
         $data = $this->linksProvider();
 
+        // Only do four of the batch tests to avoid timeouts in travis
+        // feel free to test this locally without it
+        $data = array_slice($data,0,4);
+
         $expected = [];
         $uris     = [];
 
@@ -63,7 +67,7 @@ class FasterImageTest extends PHPUnit_Framework_TestCase
         }
 
         $client = new \FasterImage\FasterImage();
-        $client->setTimeout(420);
+        $client->setTimeout(1000);
         $images = $client->batch($uris);
 
         foreach ( $images as $uri => $image ) {
@@ -82,10 +86,10 @@ class FasterImageTest extends PHPUnit_Framework_TestCase
     {
         return array(
             ['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/exif_orientation.jpg', 600, 450, 'jpeg'],
-            //['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/favicon.ico', 16, 16, 'ico'],
+            ['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/favicon.ico', 16, 16, 'ico'],
             ['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/infinite.jpg', 160, 240, 'jpeg'],
             ['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/man.ico', 48, 48, 'ico'],
-            //['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/orient_2.jpg', 230, 408, 'jpeg'],
+            ['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/orient_2.jpg', 230, 408, 'jpeg'],
             ['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/test.bmp', 40, 27, 'bmp'],
             ['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/test.cur', 32, 32, 'cur'],
             ['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/test.gif', 17, 32, 'gif'],
