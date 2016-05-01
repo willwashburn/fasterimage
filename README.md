@@ -1,4 +1,4 @@
-# FasterImage [![Build Status](https://img.shields.io/travis/willwashburn/fasterimage/master.svg?style=flat-square)](https://travis-ci.org/willwashburn/fasterimage) [![Coveralls](https://img.shields.io/coveralls/willwashburn/fasterimage.svg?maxAge=2592000&style=flat-square)](https://coveralls.io/github/willwashburn/fasterimage)  [![Packagist Version](https://img.shields.io/packagist/v/fasterimage/fasterimage.svg?style=flat-square)](https://packagist.org/packages/fasterimage/fasterimage) [![Packagist Downloads](https://img.shields.io/packagist/dt/fasterimage/fasterimage.svg?style=flat-square)](https://packagist.org/packages/fasterimage/fasterimage/stats) [![License](https://img.shields.io/packagist/l/fasterimage/fasterimage.svg?style=flat-square)](https://github.com/willwashburn/fasterimage#license)
+# FasterImage [![Build Status](https://img.shields.io/travis/willwashburn/fasterimage/master.svg?style=flat-square)](https://travis-ci.org/willwashburn/fasterimage) [![Coveralls](https://img.shields.io/coveralls/willwashburn/fasterimage.svg?maxAge=2592000&style=flat-square)](https://coveralls.io/github/willwashburn/fasterimage)  [![Packagist Version](https://img.shields.io/packagist/v/fasterimage/fasterimage.svg?style=flat-square)](https://packagist.org/packages/fasterimage/fasterimage) [![Packagist Downloads](https://img.shields.io/packagist/dt/fasterimage/fasterimage.svg?style=flat-square)](https://packagist.org/packages/fasterimage/fasterimage/stats) [![License](https://img.shields.io/packagist/l/fasterimage/fasterimage.svg?style=flat-square)](https://github.com/willwashburn/fasterimage/LICENSE)
 
 FasterImage finds the dimensions or filetype of a remote image file given its uri by fetching as little as needed, based on the excellent [Ruby implementation by Stephen Sykes](https://github.com/sdsykes/fastimage) and [PHP implementation by Tom Moor](https://github.com/tommoor/fastimage).
 
@@ -30,60 +30,22 @@ FasterImage uses the curl_muli* suite to run requests in parallel. Currently sup
 
 ```composer require fasterimage/fasterimage```
 
-Alternatively, add ```"fasterimage/fasterimage": "~1.0"``` to your composer.json
+Alternatively, add ```"fasterimage/fasterimage": "~1.1"``` to your composer.json
 
 ## Changelog
 
-### 1.0.3 (2016-04-9)
-* Use external stream package
-
-### 1.0.2 (2015-08-27)
-* Fail invalid image exceptions gracefully when using batch requests
-
-### 1.0.1 (2015-05-16)
-
-* Support PHP v5.4+
-
-### 1.0.0 (2015-05-16) [stable release!]
-
-* Support for .PSD
-* Support for .ICO + .CUR
-
-### 0.0.7 (2015-05-16)
-
-* Only support PHP v5.5+ for now :/
-
-### 0.0.6 (2015-05-11)
-
-* Add option to set timeout of requests
-* Support for EXIF in .jpgs
-* Better support for .bmp (including negative height bitmaps)
-* Normalized response indexes for all file types
-
-### 0.0.5 (2015-05-09)
-
-* Support for .webp
-
-### 0.0.4 (2015-05-07)
-
-* Support for .tiff
-* Start throwing exceptions for unknown file types
-
-### 0.0.3 (2015-05-07)
-
-* Force curl to follow redirects so you get less bad responses
-
-### 0.0.2 (2015-05-06)
-
-* Update curl headers to mimic browser so you get less bad responses
-
-### 0.0.1 (2015-05-06) [alpha release!]
-
-* Support for .jpg
-* Support for .bmp
-* Support for .gif
-* Support for .png
-* Support for parallel requests
+* v1.1.0 - Return message in return array when curl fails
+* v1.0.3 - Use external stream package
+* v1.0.2 - Fail invalid image exceptions gracefully when using batch requests
+* v1.0.1 - Support PHP v5.4+
+* v1.0.0 - **stable release** - Support for `.PSD`, `.ICO` + `.CUR`
+* v0.0.7 - Remove support for PHP v5.4
+* v0.0.6 - Add option to set timeout of requests, support for EXIF in .jpgs, better support for .bmp (including negative height bitmaps) and normalized response indexes for all file types
+* v0.0.5 - Support for `.webp`
+* v0.0.4 - Support for `.tiff` and exceptions for unknown file types
+* v0.0.3 - Force curl to follow redirects so you get less bad responses
+* v0.0.2 - Update curl headers to mimic browser so you get less bad responses
+* v0.0.1 - Support for `.jpg`, `.bmp`, `.gif`, `.png` and parallel requests
 
 ## References
 
@@ -93,7 +55,3 @@ Alternatively, add ```"fasterimage/fasterimage": "~1.0"``` to your composer.json
 * http://snippets.dzone.com/posts/show/805
 * http://www.anttikupila.com/flash/getting-jpg-dimensions-with-as3-without-loading-the-entire-file/
 * http://imagesize.rubyforge.org/
-
-## License
-
-(c) 2015 Will Washburn. MIT License

@@ -39,11 +39,12 @@ class FasterImage
         $multi   = curl_multi_init();
         $results = array();
 
+        // Create the curl handles and add them to the multi_request
         foreach ( array_values($urls) as $count => $uri ) {
 
-            $results[ $uri ] = [];
+            $results[$uri] = [];
 
-            $$count = $this->handle($uri, $results[ $uri ]);
+            $$count = $this->handle($uri, $results[$uri]);
 
             $code = curl_multi_add_handle($multi, $$count);
 
@@ -52,6 +53,7 @@ class FasterImage
             }
         }
 
+        // Perform the requests
         do {
             while ( ($mrc = curl_multi_exec($multi, $active)) == CURLM_CALL_MULTI_PERFORM ) ;
             if ( $mrc != CURLM_OK && $mrc != CURLM_CALL_MULTI_PERFORM ) {
@@ -64,6 +66,15 @@ class FasterImage
                 usleep(250);
             }
         } while ( $active );
+
+        // Figure out why individual requests may have failed
+        foreach ( array_values($urls) as $count => $uri ) {
+            $error = curl_error($$count);
+
+            if ( $error ) {
+                $results[$uri]['failure_reason'] = $error;
+            }
+        }
 
         return $results;
     }
@@ -146,7 +157,8 @@ class FasterImage
                 $result['size'] = 'failed';
 
                 return strlen($str);
-            } catch (InvalidImageException $e) {
+            }
+            catch (InvalidImageException $e) {
 
                 /*
                  * This means we've determined that we're lost and don't know

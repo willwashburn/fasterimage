@@ -1,5 +1,8 @@
 ## Changelog
 
+### 1.1.0 (2016-04-30)
+* Return message in return array when curl fails
+
 ### 1.0.3 (2016-04-9)
 * Use external stream package
 

@@ -10,6 +10,17 @@
          stopOnFailure="false"
          syntaxCheck="false"
         >
+    <logging>
+        <log type="coverage-clover" target="clover.xml"/>
+    </logging>
+    <filter>
+        <blacklist>
+            <directory>./vendor</directory>
+        </blacklist>
+            <whitelist addUncoveredFilesFromWhitelist="true">
+                <directory>./src</directory>
+            </whitelist>
+    </filter>
     <testsuites>
         <testsuite name="Package Test Suite">
             <directory suffix=".php">./tests/</directory>
