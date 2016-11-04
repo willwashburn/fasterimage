@@ -36,7 +36,7 @@ class FasterImageTest extends PHPUnit_Framework_TestCase
 
         // Only do one of the batch tests to avoid timeouts in travis
         // feel free to test this locally without it
-//        $data = array_slice($data, 0, 1);
+        $data = array_slice($data, 0, 1);
 
         $expected = [];
         $uris     = [];
