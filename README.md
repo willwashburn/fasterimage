@@ -34,11 +34,12 @@ Alternatively, add ```"fasterimage/fasterimage": "~1.1"``` to your composer.json
 
 ## Changelog
 
+* v1.1.1 - Properly handle jpeg's with corrupted Exif tags 
 * v1.1.0 - Return message in return array when curl fails
 * v1.0.3 - Use external stream package
 * v1.0.2 - Fail invalid image exceptions gracefully when using batch requests
 * v1.0.1 - Support PHP v5.4+
-* v1.0.0 - **stable release** - Support for `.PSD`, `.ICO` + `.CUR`
+* v1.0.0 - **Stable Release** - Support for `.PSD`, `.ICO` + `.CUR`
 * v0.0.7 - Remove support for PHP v5.4
 * v0.0.6 - Add option to set timeout of requests, support for EXIF in .jpgs, better support for .bmp (including negative height bitmaps) and normalized response indexes for all file types
 * v0.0.5 - Support for `.webp`

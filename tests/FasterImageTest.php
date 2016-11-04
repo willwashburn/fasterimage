@@ -27,21 +27,6 @@ class FasterImageTest extends PHPUnit_Framework_TestCase
         }
     }
 
-    public function test_invalid_image_returns_invalid() {
-        $uris = [
-            'http://gluesticksgumdrops.com/wp-content/uploads/2015/03/how-to-find-more-time-to-read-to-your-kids.jpg'
-        ];
-
-        $client = new \FasterImage\FasterImage();
-        $images = $client->batch($uris);
-
-        foreach ( $images as $uri => $image ) {
-            $this->assertArrayHasKey('size', $image);
-            $this->assertEquals('invalid', $image['size']);
-        }
-
-    }
-
     /**
      * @throws \Exception
      */
@@ -49,21 +34,21 @@ class FasterImageTest extends PHPUnit_Framework_TestCase
     {
         $data = $this->linksProvider();
 
-        // Only do four of the batch tests to avoid timeouts in travis
+        // Only do one of the batch tests to avoid timeouts in travis
         // feel free to test this locally without it
-        $data = array_slice($data,0,1);
+//        $data = array_slice($data, 0, 1);
 
         $expected = [];
         $uris     = [];
 
         foreach ( $data as $link ) {
-            $uri              = current($link);
-            $width            = next($link);
-            $height           = next($link);
-            $type             = next($link);
+            $uri    = current($link);
+            $width  = next($link);
+            $height = next($link);
+            $type   = next($link);
 
-            $uris[]           = $uri;
-            $expected[ $uri ] = compact('width', 'height', 'type');
+            $uris[]         = $uri;
+            $expected[$uri] = compact('width', 'height', 'type');
         }
 
         $client = new \FasterImage\FasterImage();
@@ -71,11 +56,11 @@ class FasterImageTest extends PHPUnit_Framework_TestCase
         $images = $client->batch($uris);
 
         foreach ( $images as $uri => $image ) {
-            $this->assertArrayHasKey('type',$image,"$uri is missing type: ".print_r($image,true));
-            $this->assertEquals($expected[ $uri ]['type'], $image['type'], "Failed to get the right type for $uri");
-            $this->assertArrayHasKey('size', $image, "There is no size defined for $uri ". print_r($image,true));
-            $this->assertEquals($expected[ $uri ]['width'], $image['size'][0], "Failed to get the right width for $uri ". print_r($image,true));
-            $this->assertEquals($expected[ $uri ]['height'], $image['size'][1], "Failed to get the right height for $uri ". print_r($image,true));
+            $this->assertArrayHasKey('type', $image, "$uri is missing type: " . print_r($image, true));
+            $this->assertEquals($expected[$uri]['type'], $image['type'], "Failed to get the right type for $uri");
+            $this->assertArrayHasKey('size', $image, "There is no size defined for $uri " . print_r($image, true));
+            $this->assertEquals($expected[$uri]['width'], $image['size'][0], "Failed to get the right width for $uri " . print_r($image, true));
+            $this->assertEquals($expected[$uri]['height'], $image['size'][1], "Failed to get the right height for $uri " . print_r($image, true));
         }
     }
 
@@ -105,6 +90,9 @@ class FasterImageTest extends PHPUnit_Framework_TestCase
             ['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/webp_vp8.webp', 550, 368, 'webp'],
             ['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/webp_vp8l.webp', 386, 395, 'webp'],
             ['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/webp_vp8x.webp', 386, 395, 'webp'],
+            ['http://data.whicdn.com/images/13921683/superthumb.webp', 300, 250, 'webp'],
+            ['http://ketosizeme.com/wp-content/uploads/2016/11/Keto-Corn-Dog-Recipe-Low-Carb-High-Fat-.jpg', 700, 467, 'jpeg'],
+            ['http://gluesticksgumdrops.com/wp-content/uploads/2015/03/how-to-find-more-time-to-read-to-your-kids.jpg', 700, 1000, 'jpeg'],
         );
     }
 }

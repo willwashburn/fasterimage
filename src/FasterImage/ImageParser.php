@@ -203,8 +203,15 @@ class ImageParser
                         $stream->write($data);
 
                         if ( $stream->read(4) === 'Exif' ) {
+
                             $stream->read(2);
-                            $exif = new ExifParser($stream);
+
+                            // Some Exif data is broken/wrong so we'll ignore
+                            // any exceptions here
+                            try {
+                                $exif = new ExifParser($stream);
+                            } catch (\Exception $e) {}
+
                         }
 
                         break;
