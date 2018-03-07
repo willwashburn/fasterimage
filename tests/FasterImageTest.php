@@ -36,7 +36,7 @@ class FasterImageTest extends PHPUnit_Framework_TestCase
 
         // Only do one of the batch tests to avoid timeouts in travis
         // feel free to test this locally without it
-//        $data = array_slice($data, 0, 1);
+        $data = array_slice($data, 0, 1);
 
         $expected = [];
         $uris     = [];
@@ -90,7 +90,6 @@ class FasterImageTest extends PHPUnit_Framework_TestCase
             ['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/webp_vp8.webp', 550, 368, 'webp'],
             ['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/webp_vp8l.webp', 386, 395, 'webp'],
             ['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/webp_vp8x.webp', 386, 395, 'webp'],
-            ['http://data.whicdn.com/images/13921683/superthumb.webp', 300, 250, 'webp'],
             ['http://ketosizeme.com/wp-content/uploads/2016/11/Keto-Corn-Dog-Recipe-Low-Carb-High-Fat-.jpg', 700, 467, 'jpeg'],
             ['http://gluesticksgumdrops.com/wp-content/uploads/2015/03/how-to-find-more-time-to-read-to-your-kids.jpg', 700, 1000, 'jpeg'],
         );
