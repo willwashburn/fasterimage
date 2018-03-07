@@ -1,5 +1,11 @@
 ## Changelog
 
+### 1.1.2 (2018-03-07)
+* Update Accept header to accept images
+
+### 1.1.1 (2016-11-04)
+* Properly handle jpeg's with corrupted Exif tags 
+
 ### 1.1.0 (2016-04-30)
 * Return message in return array when curl fails
 

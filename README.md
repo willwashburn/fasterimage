@@ -34,6 +34,7 @@ Alternatively, add ```"fasterimage/fasterimage": "~1.1"``` to your composer.json
 
 ## Changelog
 
+* v1.1.2 - Update Accept header to accept images
 * v1.1.1 - Properly handle jpeg's with corrupted Exif tags 
 * v1.1.0 - Return message in return array when curl fails
 * v1.0.3 - Use external stream package
