@@ -26,6 +26,13 @@ class FasterImage
     protected $timeout = 10;
 
     /**
+     * If the content length should be included in the result set.
+     *
+     * @var bool
+     */
+    protected $includeContentLength = false;
+
+    /**
      * Get the size of each of the urls in a list
      *
      * @param array $urls
@@ -88,6 +95,14 @@ class FasterImage
     }
 
     /**
+     * @param $bool
+     */
+    public function setIncludeContentLength($bool)
+    {
+        $this->includeContentLength = (bool) $bool;
+    }
+
+    /**
      * Create the handle for the curl request
      *
      * @param $url
@@ -126,6 +141,26 @@ class FasterImage
             "Pragma: ", // browsers keep this blank.
         ]);
         curl_setopt($ch, CURLOPT_ENCODING, "");
+
+
+        /*
+         * We parse the headers to find the content-length. This is added to the
+         * result array and can be useful to determine the overall image filesize.
+         */
+        if ($this->includeContentLength) {
+
+            curl_setopt($ch, CURLOPT_HEADERFUNCTION, function ($curl, $header) use (&$result) {
+
+                $len    = strlen($header);
+                $header = explode(':', $header, 2);
+
+                if ( strtolower($header[0]) === 'content-length' ) {
+                    $result['content-length'] = trim($header[1]);
+                }
+
+                return $len;
+            });
+        }
 
         curl_setopt($ch, CURLOPT_WRITEFUNCTION, function ($ch, $str) use (& $result, & $parser, & $stream, $url) {
 

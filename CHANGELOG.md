@@ -1,5 +1,8 @@
 ## Changelog
 
+### 1.2.0 (2018-03-07)
+* Add option to include content-length in result set
+
 ### 1.1.2 (2018-03-07)
 * Update Accept header to accept images
 
