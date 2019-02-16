@@ -71,7 +71,7 @@ class ExifParser
      */
     public function isRotated()
     {
-        return (! empty($this->orientation) && $this->orientation >= 5);
+        return (! empty($this->orientation) && $this->orientation >= 5 && $this->orientation <= 8);
     }
 
     /**
