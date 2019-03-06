@@ -33,6 +33,25 @@ class FasterImage
     protected $includeContentLength = false;
 
     /**
+     * The user agent to set for requests.
+     *
+     * @var string
+     */
+    protected $userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36';
+
+    /**
+     * Constructor.
+     *
+     * @param string $userAgent Optional. User agent to set for requests.
+     */
+    public function __construct($userAgent = '')
+    {
+        if ( ! empty( $userAgent ) ) {
+            $this->userAgent = $userAgent;
+        }
+    }
+
+    /**
      * Get the size of each of the urls in a list
      *
      * @param array $urls
@@ -130,7 +149,7 @@ class FasterImage
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
 
         #  Some web servers require the useragent to be not a bot. So we are liars.
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36');
+        curl_setopt($ch, CURLOPT_USERAGENT, $this->userAgent);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             "Accept: image/webp,image/*,*/*;q=0.8",
             "Cache-Control: max-age=0",
