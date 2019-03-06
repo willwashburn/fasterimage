@@ -1,4 +1,9 @@
 ## Changelog
+### 1.3.0 (2019-03-06)
+* Add ability for user agent, buffer size, and SSL host/peer verification to be overridden
+
+### 1.2.1 (2019-02-18)
+* Limit isRotated to only check for valid orientation values
 
 ### 1.2.0 (2018-03-07)
 * Add option to include content-length in result set
