@@ -17,11 +17,32 @@ use WillWashburn\Stream\Stream;
 class FasterImage
 {
     /**
-     * The default timeout
+     * The default timeout.
      *
      * @var int
      */
     protected $timeout = 10;
+
+    /**
+     * The default buffer size.
+     *
+     * @var int
+     */
+    protected $bufferSize = 256;
+
+    /**
+     * The default for whether to verify SSL peer.
+     *
+     * @var bool
+     */
+    protected $sslVerifyPeer = false;
+
+    /**
+     * The default for whether to verify SSL host.
+     *
+     * @var bool
+     */
+    protected $sslVerifyHost = false;
 
     /**
      * If the content length should be included in the result set.
@@ -29,6 +50,13 @@ class FasterImage
      * @var bool
      */
     protected $includeContentLength = false;
+
+    /**
+     * The default user agent to set for requests.
+     *
+     * @var string
+     */
+    protected $userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36';
 
     /**
      * Get the size of each of the urls in a list
@@ -85,19 +113,51 @@ class FasterImage
     }
 
     /**
-     * @param $seconds
+     * @param int $seconds
      */
     public function setTimeout($seconds)
     {
-        $this->timeout = $seconds;
+        $this->timeout = (int) $seconds;
     }
 
     /**
-     * @param $bool
+     * @param int $bufferSize
+     */
+    public function setBufferSize($bufferSize)
+    {
+        $this->bufferSize = (int) $bufferSize;
+    }
+
+    /**
+     * @param bool $sslVerifyPeer
+     */
+    public function setSslVerifyPeer($sslVerifyPeer)
+    {
+        $this->sslVerifyPeer = (bool) $sslVerifyPeer;
+    }
+
+    /**
+     * @param bool $sslVerifyHost
+     */
+    public function setSslVerifyHost($sslVerifyHost)
+    {
+        $this->sslVerifyHost = (bool) $sslVerifyHost;
+    }
+
+    /**
+     * @param bool $bool
      */
     public function setIncludeContentLength($bool)
     {
         $this->includeContentLength = (bool) $bool;
+    }
+
+    /**
+     * @param string $userAgent
+     */
+    public function setUserAgent($userAgent)
+    {
+        $this->userAgent = $userAgent;
     }
 
     /**
@@ -120,15 +180,15 @@ class FasterImage
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_BUFFERSIZE, 256);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_BUFFERSIZE, $this->bufferSize);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->sslVerifyPeer ? 1 : 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $this->sslVerifyHost ? 2 : 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->timeout);
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
 
         #  Some web servers require the useragent to be not a bot. So we are liars.
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36');
+        curl_setopt($ch, CURLOPT_USERAGENT, $this->userAgent);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             "Accept: image/webp,image/*,*/*;q=0.8",
             "Cache-Control: max-age=0",
