@@ -30,10 +30,12 @@ FasterImage uses the curl_muli* suite to run requests in parallel. Currently sup
 
 ```composer require fasterimage/fasterimage```
 
-Alternatively, add ```"fasterimage/fasterimage": "~1.2"``` to your composer.json
+Alternatively, add ```"fasterimage/fasterimage": "~1.3"``` to your composer.json
 
 ## Changelog
 
+* v1.3.0 - Add ability for user agent, buffer size, and SSL host/peer verification to be overridden
+* v1.2.1 - Limit isRotated to only check for valid orientation values
 * v1.2.0 - Add option to include content-length in result set
 * v1.1.2 - Update Accept header to accept images
 * v1.1.1 - Properly handle jpeg's with corrupted Exif tags 
