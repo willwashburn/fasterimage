@@ -19,11 +19,32 @@ use WillWashburn\Stream\Stream;
 class FasterImage
 {
     /**
-     * The default timeout
+     * The default timeout.
      *
      * @var int
      */
     protected $timeout = 10;
+
+    /**
+     * The default buffer size.
+     *
+     * @var int
+     */
+    protected $bufferSize = 256;
+
+    /**
+     * The default for whether to verify SSL peer.
+     *
+     * @var bool
+     */
+    protected $sslVerifyPeer = false;
+
+    /**
+     * The default for whether to verify SSL host.
+     *
+     * @var bool
+     */
+    protected $sslVerifyHost = false;
 
     /**
      * If the content length should be included in the result set.
@@ -33,7 +54,7 @@ class FasterImage
     protected $includeContentLength = false;
 
     /**
-     * The user agent to set for requests.
+     * The default user agent to set for requests.
      *
      * @var string
      */
@@ -102,6 +123,30 @@ class FasterImage
     }
 
     /**
+     * @param int $bufferSize
+     */
+    public function setBufferSize($bufferSize)
+    {
+        $this->bufferSize = (int) $bufferSize;
+    }
+
+    /**
+     * @param bool $sslVerifyPeer
+     */
+    public function setSslVerifyPeer($sslVerifyPeer)
+    {
+        $this->sslVerifyPeer = (bool) $sslVerifyPeer;
+    }
+
+    /**
+     * @param bool $sslVerifyHost
+     */
+    public function setSslVerifyHost($sslVerifyHost)
+    {
+        $this->sslVerifyHost = (bool) $sslVerifyHost;
+    }
+
+    /**
      * @param bool $bool
      */
     public function setIncludeContentLength($bool)
@@ -137,9 +182,9 @@ class FasterImage
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_BUFFERSIZE, 256);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_BUFFERSIZE, $this->bufferSize);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->sslVerifyPeer ? 1 : 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $this->sslVerifyHost ? 2 : 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->timeout);
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
