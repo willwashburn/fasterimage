@@ -13,8 +13,6 @@ use WillWashburn\Stream\Stream;
  * (https://github.com/sdsykes/fastimage)
  *
  * MIT Licensed
- *
- * @version 0.01
  */
 class FasterImage
 {
