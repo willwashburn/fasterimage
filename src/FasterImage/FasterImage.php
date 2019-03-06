@@ -40,18 +40,6 @@ class FasterImage
     protected $userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36';
 
     /**
-     * Constructor.
-     *
-     * @param string $userAgent Optional. User agent to set for requests.
-     */
-    public function __construct($userAgent = '')
-    {
-        if ( ! empty( $userAgent ) ) {
-            $this->userAgent = $userAgent;
-        }
-    }
-
-    /**
      * Get the size of each of the urls in a list
      *
      * @param array $urls
@@ -106,19 +94,27 @@ class FasterImage
     }
 
     /**
-     * @param $seconds
+     * @param int $seconds
      */
     public function setTimeout($seconds)
     {
-        $this->timeout = $seconds;
+        $this->timeout = (int) $seconds;
     }
 
     /**
-     * @param $bool
+     * @param bool $bool
      */
     public function setIncludeContentLength($bool)
     {
         $this->includeContentLength = (bool) $bool;
+    }
+
+    /**
+     * @param string $userAgent
+     */
+    public function setUserAgent($userAgent)
+    {
+        $this->userAgent = $userAgent;
     }
 
     /**
