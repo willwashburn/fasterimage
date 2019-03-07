@@ -366,7 +366,7 @@ class ImageParser
     {
         $this->stream->resetPointer();
 
-        // Keep reading bytes until
+        // Keep reading bytes until we find the complete <svg> start tag.
         $inside = false;
         $markup = '';
         while ( true ) {
