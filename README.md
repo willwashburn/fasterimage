@@ -2,7 +2,7 @@
 
 FasterImage finds the dimensions or filetype of a remote image file given its uri by fetching as little as needed, based on the excellent [Ruby implementation by Stephen Sykes](https://github.com/sdsykes/fastimage) and [PHP implementation by Tom Moor](https://github.com/tommoor/fastimage).
 
-FasterImage uses the curl_muli* suite to run requests in parallel. Currently supports JPG, GIF, PNG, WEBP, BMP, PSD, TIFF, and ICO files.
+FasterImage uses the curl_muli* suite to run requests in parallel. Currently supports JPG, GIF, PNG, WEBP, BMP, PSD, TIFF, SVG, and ICO files.
 
 ## Usage
 ```php
@@ -18,7 +18,8 @@ FasterImage uses the curl_muli* suite to run requests in parallel. Currently sup
             'http://wwww.example.com/image6.psd',
             'http://wwww.example.com/image7.webp',
             'http://wwww.example.com/image8.ico',
-            'http://wwww.example.com/image9.cur'
+            'http://wwww.example.com/image9.cur',
+            'http://wwww.example.com/image10.svg'
         ]);
         
         foreach ($images as $image) {
@@ -30,10 +31,11 @@ FasterImage uses the curl_muli* suite to run requests in parallel. Currently sup
 
 ```composer require fasterimage/fasterimage```
 
-Alternatively, add ```"fasterimage/fasterimage": "~1.3"``` to your composer.json
+Alternatively, add ```"fasterimage/fasterimage": "~1.4"``` to your composer.json
 
 ## Changelog
 
+* v1.4.0 - Add support for parsing dimensions from SVG images
 * v1.3.0 - Add ability for user agent, buffer size, and SSL host/peer verification to be overridden
 * v1.2.1 - Limit isRotated to only check for valid orientation values
 * v1.2.0 - Add option to include content-length in result set
