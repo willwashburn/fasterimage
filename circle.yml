@@ -21,8 +21,7 @@ jobs:
             - v1-dependencies-
 
       - run: mkdir -p build/logs      
-      - run: composer require satooshi/php-coveralls
-      - run: composer install -n --prefer-dist
+      - run: composer require satooshi/php-coveralls:~0.6@stable && composer install -n --prefer-dist
 
       - save_cache:
           key: v1-dependencies-{{ checksum "composer.json" }}
