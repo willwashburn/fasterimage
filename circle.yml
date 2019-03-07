@@ -31,4 +31,4 @@ jobs:
 
       # run tests with phpunit
       - run: ./vendor/bin/phpunit
-      - run: php vendor/bin/coveralls --coverage_clover="clover.xml"      
+      - run: ./vendor/bin/php-coveralls --coverage_clover="clover.xml"      
