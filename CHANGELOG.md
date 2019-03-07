@@ -1,4 +1,7 @@
 ## Changelog
+### 1.4.0 (2019-03-07)
+* Add support for parsing dimensions from SVG images
+
 ### 1.3.0 (2019-03-06)
 * Add ability for user agent, buffer size, and SSL host/peer verification to be overridden
 
