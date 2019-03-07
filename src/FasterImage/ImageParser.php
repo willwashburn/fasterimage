@@ -136,12 +136,16 @@ class ImageParser
                     return $this->type = 'tiff';
                 default:
                     $this->stream->resetPointer();
-                    $markup = $this->stream->read( 1024 );
-                    if ( false !== strpos( $markup, '<svg' ) ) {
-                        $this->type = 'svg';
-                    } else {
-                        return false;
+
+                    // Keep reading bytes until we find '<svg'.
+                    while ( true ) {
+                        $byte = $this->stream->read( 1 );
+                        if ( '<' === $byte && 'svg' === $this->stream->peek( 3 ) ) {
+                            $this->type = 'svg';
+                            return $this->type;
+                        }
                     }
+                    return false;
             }
         }
 
@@ -361,23 +365,50 @@ class ImageParser
     protected function parseSizeForSvg()
     {
         $this->stream->resetPointer();
-        $markup = $this->stream->read( 1024 );
-        if ( ! preg_match( '#<svg.*?>#s', $markup, $matches ) ) {
-            return null;
+
+        // Keep reading bytes until
+        $inside = false;
+        $markup = '';
+        while ( true ) {
+            $byte = $this->stream->read(1);
+
+            // Open a tag if not in a tag and the byte is '<'.
+            if ( ! $inside && '<' === $byte ) {
+                $inside = true;
+                $markup .= $byte;
+            }
+            // Close the current tag if the tag is open, the byte is '>', and the last characters weren't a comment token.
+            elseif ( $inside && '>' === $byte && '--' !== substr( $markup, -2 ) ) {
+
+                $inside = false;
+                $markup .= $byte;
+
+                // Break the loop if this tag started with '<svg', as we have now found the SVG start tag.
+                if ( '<svg' === strtolower( substr( $markup, 0, 4 ) ) ) {
+                    break;
+                }
+
+                // Clear out the markup since we consumed the end of the tag/comment.
+                $markup = '';
+            }
+            // Append the bte to the current tag if the tag is open.
+            elseif ( $inside ) {
+                $markup .= $byte;
+            }
         }
-        $svg_start_tag = $matches[0];
+
         $width = null;
         $height = null;
-        if ( preg_match( '/\swidth=([\'"])(\d+(\.\d+)?)(px)?\1/', $svg_start_tag, $matches ) ) {
+        if ( preg_match( '/\swidth=([\'"])(\d+(\.\d+)?)(px)?\1/', $markup, $matches ) ) {
             $width = floatval( $matches[2] );
         }
-        if ( preg_match( '/\sheight=([\'"])(\d+(\.\d+)?)(px)?\1/', $svg_start_tag, $matches ) ) {
+        if ( preg_match( '/\sheight=([\'"])(\d+(\.\d+)?)(px)?\1/', $markup, $matches ) ) {
             $height = floatval( $matches[2] );
         }
         if ( $width && $height ) {
             return [ $width, $height ];
         }
-        if ( preg_match( '/\sviewBox=([\'"])[^\1]*(?:,|\s)+(?P<width>\d+(?:\.\d+)?)(?:px)?(?:,|\s)+(?P<height>\d+(?:\.\d+)?)(?:px)?\s*\1/', $svg_start_tag, $matches ) ) {
+        if ( preg_match( '/\sviewBox=([\'"])[^\1]*(?:,|\s)+(?P<width>\d+(?:\.\d+)?)(?:px)?(?:,|\s)+(?P<height>\d+(?:\.\d+)?)(?:px)?\s*\1/', $markup, $matches ) ) {
             return [
                 floatval( $matches['width'] ),
                 floatval( $matches['height'] )
