@@ -34,10 +34,6 @@ class FasterImageTest extends PHPUnit_Framework_TestCase
     {
         $data = $this->linksProvider();
 
-        // Only do one of the batch tests to avoid timeouts in travis
-        // feel free to test this locally without it
-        $data = array_slice($data, 0, 1);
-
         $expected = [];
         $uris     = [];
 
@@ -92,6 +88,10 @@ class FasterImageTest extends PHPUnit_Framework_TestCase
             ['https://github.com/sdsykes/fastimage/raw/master/test/fixtures/webp_vp8x.webp', 386, 395, 'webp'],
             ['http://ketosizeme.com/wp-content/uploads/2016/11/Keto-Corn-Dog-Recipe-Low-Carb-High-Fat-.jpg', 700, 467, 'jpeg'],
             ['http://gluesticksgumdrops.com/wp-content/uploads/2015/03/how-to-find-more-time-to-read-to-your-kids.jpg', 700, 1000, 'jpeg'],
+            ['https://s.w.org/images/core/emoji/11/svg/1f642.svg', 36, 36, 'svg'], // With viewBox only.
+            ['https://gist.github.com/westonruter/0d66e6629526fc820a31fd43cf325376/raw/ed26b6d60b3d1c07a82907553795e6535c12da89/smiley-oval-vertical-padding.svg', 36, 96, 'svg'],
+            ['https://gist.github.com/westonruter/0d66e6629526fc820a31fd43cf325376/raw/4c3b8d7fdad3233d669c05c7313c0503c8a3c8ed/smiley-with-dimensions-and-offcenter-viewbox.svg', 36, 42, 'svg'],
+            ['https://gist.github.com/westonruter/0d66e6629526fc820a31fd43cf325376/raw/23651d8fec1a22707632f687b742700896daf54f/svg-tag-commented-out.svg', 38, 44, 'svg'],
         );
     }
 }
