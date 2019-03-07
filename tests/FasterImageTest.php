@@ -34,11 +34,6 @@ class FasterImageTest extends PHPUnit_Framework_TestCase
     {
         $data = $this->linksProvider();
 
-        // Only do one of the batch tests to avoid timeouts in travis for PHP<7.0 since too slow.
-        if ( version_compare( PHP_VERSION, '7.0', '<' ) ) {
-            $data = array_slice($data, 0, 1);
-        }
-
         $expected = [];
         $uris     = [];
 
