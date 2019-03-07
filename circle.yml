@@ -20,6 +20,8 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
+      - run: mkdir -p build/logs      
+      - run: composer require satooshi/php-coveralls
       - run: composer install -n --prefer-dist
 
       - save_cache:
@@ -29,3 +31,4 @@ jobs:
 
       # run tests with phpunit
       - run: ./vendor/bin/phpunit
+      - run: php vendor/bin/coveralls --coverage_clover="clover.xml"      
