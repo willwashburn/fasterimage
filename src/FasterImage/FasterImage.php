@@ -68,6 +68,23 @@ class FasterImage
      */
     public function batch(array $urls)
     {
+        $has_curl_multi = (
+            function_exists( 'curl_multi_init' )
+            &&
+            function_exists( 'curl_multi_exec' )
+            &&
+            function_exists( 'curl_multi_add_handle' )
+            &&
+            function_exists( 'curl_multi_select' )
+            &&
+            defined( 'CURLM_OK' )
+            &&
+            defined( 'CURLM_CALL_MULTI_PERFORM' )
+        );
+        $has_curl_multi = false; // TEMP for unit testing.
+        if ( ! $has_curl_multi ) {
+            return $this->batchSynchronously($urls);
+        }
 
         $multi   = curl_multi_init();
         $results = array();
@@ -109,6 +126,33 @@ class FasterImage
             }
         }
 
+        return $results;
+    }
+
+    /**
+     * Get the size of each of the urls in a list, using synchronous method
+     *
+     * @param array $urls
+     *
+     * @return array
+     * @throws \Exception
+     */
+    protected function batchSynchronously(array $urls) {
+        $results = [];
+        foreach ( array_values($urls) as $count => $uri ) {
+            $results[$uri] = [];
+
+            $ch = $this->handle($uri, $results[$uri]);
+
+            curl_exec($ch);
+
+            // We can't check return value because the buffer size is too small and curl_error() will always be "Failed writing body".
+            if ( empty($results[$uri]) ) {
+                throw new \Exception("Curl handle for $uri could not be executed");
+            }
+
+            curl_close($ch);
+        }
         return $results;
     }
 
@@ -271,7 +315,7 @@ class FasterImage
              */
             //
             // hey curl! this is an error. But really we just are stopping cause
-            // we already have what we wwant
+            // we already have what we want
             return -1;
         });
 
