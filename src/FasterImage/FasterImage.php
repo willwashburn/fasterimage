@@ -68,6 +68,17 @@ class FasterImage
      */
     public function batch(array $urls)
     {
+
+        /**
+         * It turns out that even when cURL is installed, the `curl_multi_init()
+         * function may be disabled on some hosts who are seeking to guard against
+         * DDoS attacks.
+         *
+         * @see https://github.com/ampproject/amp-wp/pull/2183#issuecomment-491506514.
+         *
+         * If it is disabled, we will batch these synchronously (with a significant
+         * performance hit).
+         */
         $has_curl_multi = (
             function_exists( 'curl_multi_init' )
             &&
