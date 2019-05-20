@@ -30,4 +30,5 @@ jobs:
 
       # run tests with phpunit
       - run: ./vendor/bin/phpunit
-      - run: ./vendor/bin/php-coveralls --coverage_clover="clover.xml"      
+      - run: DISABLE_CURL_MULTI=1 ./vendor/bin/phpunit
+      - run: ./vendor/bin/php-coveralls --coverage_clover="clover.xml"

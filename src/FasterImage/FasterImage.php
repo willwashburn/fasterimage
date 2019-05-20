@@ -74,7 +74,7 @@ class FasterImage
          * function may be disabled on some hosts who are seeking to guard against
          * DDoS attacks.
          *
-         * @see https://github.com/ampproject/amp-wp/pull/2183#issuecomment-491506514.
+         * @see https://github.com/ampproject/amp-wp/pull/2183#issuecomment-491506514
          *
          * If it is disabled, we will batch these synchronously (with a significant
          * performance hit).
@@ -92,7 +92,6 @@ class FasterImage
             &&
             defined( 'CURLM_CALL_MULTI_PERFORM' )
         );
-        $has_curl_multi = false; // TEMP for unit testing.
         if ( ! $has_curl_multi ) {
             return $this->batchSynchronously($urls);
         }

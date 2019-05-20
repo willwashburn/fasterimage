@@ -7,6 +7,29 @@ include('../vendor/autoload.php');
  */
 class FasterImageTest extends \PHPUnit\Framework\TestCase
 {
+    use \phpmock\phpunit\PHPMock;
+
+    /**
+     * Set up.
+     */
+    protected function setUp() {
+        parent::setUp();
+
+        // Mock function_exists() to return false for all curl_multi_* functions when PHPUnit is invoked with DISABLE_CURL_MULTI=1 environment variable.
+        if ( isset( $_ENV['DISABLE_CURL_MULTI'] ) && true === filter_var( $_ENV['DISABLE_CURL_MULTI'], FILTER_VALIDATE_BOOLEAN ) ) {
+            $function_exists = $this->getFunctionMock('FasterImage', 'function_exists');
+            $function_exists->expects($this->atLeastOnce())->willReturnCallback(
+                function($function) {
+                    if ( is_string($function) && 0 === strpos( $function, 'curl_multi_' ) ) {
+                        return false;
+                    } else {
+                        return function_exists($function);
+                    }
+                }
+            );
+        }
+    }
+
     /**
      * @throws Exception
      */
