@@ -5,7 +5,7 @@ include('../vendor/autoload.php');
 /**
  * Class FasterImageTest
  */
-class FasterImageTest extends PHPUnit_Framework_TestCase
+class FasterImageTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @throws Exception
