@@ -61,10 +61,10 @@ class FasterImage
     /**
      * Get the size of each of the urls in a list
      *
-     * @param array $urls
+     * @param string[] $urls URLs to fetch.
      *
-     * @return array
-     * @throws \Exception
+     * @return array Results.
+     * @throws \Exception When the cURL write callback fails to amend the $results.
      */
     public function batch(array $urls)
     {
@@ -142,10 +142,10 @@ class FasterImage
     /**
      * Get the size of each of the urls in a list, using synchronous method
      *
-     * @param array $urls
+     * @param string[] $urls URLs to fetch.
      *
-     * @return array
-     * @throws \Exception
+     * @return array Results.
+     * @throws \Exception When the cURL write callback fails to amend the $results.
      */
     protected function batchSynchronously(array $urls) {
         $results = [];
