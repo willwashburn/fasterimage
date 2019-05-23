@@ -21,7 +21,6 @@ jobs:
             - v1-dependencies-
 
       - run: mkdir -p build/logs      
-      - run: composer require php-coveralls/php-coveralls && composer install -n --prefer-dist
 
       - save_cache:
           key: v1-dependencies-{{ checksum "composer.json" }}
