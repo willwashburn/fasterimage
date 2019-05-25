@@ -20,8 +20,8 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      - run: mkdir -p build/logs      
-      - run: composer require php-coveralls/php-coveralls && composer install -n --prefer-dist
+      - run: mkdir -p build/logs
+      - run: composer install -n --prefer-dist
 
       - save_cache:
           key: v1-dependencies-{{ checksum "composer.json" }}
@@ -30,4 +30,5 @@ jobs:
 
       # run tests with phpunit
       - run: ./vendor/bin/phpunit
-      - run: ./vendor/bin/php-coveralls --coverage_clover="clover.xml"      
+      - run: ./vendor/bin/php-coveralls --coverage_clover="clover.xml"
+      - run: DISABLE_CURL_MULTI=1 ./vendor/bin/phpunit

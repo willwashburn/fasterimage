@@ -1,4 +1,7 @@
 ## Changelog
+### 1.5.0 (2019-05-25)
+* Fallback support when curl_multi_init() is not available
+
 ### 1.4.0 (2019-03-07)
 * Add support for parsing dimensions from SVG images
 
